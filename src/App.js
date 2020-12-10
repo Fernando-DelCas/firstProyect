@@ -3,26 +3,46 @@ import Header from './components/header/header';
 import UserCard from './components/userCard/userCard';
 import Button from './components/header/button/button';
 import UserMenu from './components/header/userMenu/userMenu';
-//import BoardList from './components/boardList/boardList';  
-//import BoardForm from './components/BoardForm/BoardForm';
+import React, { useState, useEffect } from 'react';
+import BoardList from './components/boardList/boardList';
+import HomePage from './pages/homePage';
+import UserProfilePage from './pages/userProfilePage';
+import {BrowserRouter, Switch, Route} from 'react-router-dom';
 
 
 
-function App() {
+ const App = () => {
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    fetch("http://localhost:5000/api/users/1")
+      .then((response) => response.json())
+      .then((json) => setUser(json));
+  },[]);
+  
   return (
-    <div className="app_body">
-      <div className="app_header">
-          <Header/>
-          <Button/>
-          <UserMenu/>
-      </div>
-    <UserCard avatar ="https://images.generated.photos/Umpk1cvGsGZuVs3Wsvwsl_Ki7svIPPQr8Kfy0Yzn1sc/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/Z3M6Ly9nZW5lcmF0/ZWQtcGhvdG9zL3Yz/XzAwMDgwOTdfMDU1/MjcxM18wMTQ4ODI4/LmpwZw.jpg" 
-    userName="johnDoe" followingCount ={14} fullName="John Doe"/>
-   
-    
-  </div>
+    <div className="app__body">
+      <BrowserRouter>
+        <Header user={user} />
+        <Switch>
+          <Route path="/boards">
+          <BoardPage />
+          </Route>
+          <Route path="user">
+            <UserProfilePage user={user} />
+          </Route>
+          <Route path="/">
+           <HomePage user={user}/>
+        </Route>
+        </Switch>
+        </BrowserRouter>
+     </div>
+       
   );
-    
+
+  
+}
+function BoardPage() {
+  return <h2>Home</h2>
 }
 
 export default App;
